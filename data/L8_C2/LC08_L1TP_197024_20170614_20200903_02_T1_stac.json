@@ -1,0 +1,322 @@
+{
+    "stac_version": "0.7.0",
+    "stac_extensions": [
+        "eo",
+        "https://landsat.usgs.gov/stac/landsat-extension/schema.json"
+    ],
+    "id": "LC08_L1TP_197024_20170614_20200903_02_T1",
+    "type": "Feature",
+    "bbox": [
+        4.984448717308616,
+        50.611574269851424,
+        8.354059455560243,
+        52.76050102238219
+    ],
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    5.700294495780768,
+                    52.76050102238219
+                ],
+                [
+                    8.354059455560243,
+                    52.30191163339884
+                ],
+                [
+                    7.54301696787369,
+                    50.611574269851424
+                ],
+                [
+                    4.984448717308616,
+                    51.062100828773744
+                ],
+                [
+                    5.700294495780768,
+                    52.76050102238219
+                ]
+            ]
+        ]
+    },
+    "description": "Landsat Collection 2 Level-1 Product",
+    "properties": {
+        "datetime": "2017-06-14",
+        "eo:cloud_cover": 0.74,
+        "eo:sun_azimuth": 149.56344804,
+        "eo:sun_elevation": 58.85478262,
+        "eo:platform": "LANDSAT_8",
+        "eo:instrument": "OLI_TIRS",
+        "eo:off_nadir": 0,
+        "landsat:cloud_cover_land": 0.74,
+        "landsat:wrs_type": "2",
+        "landsat:wrs_path": "197",
+        "landsat:wrs_row": "24",
+        "landsat:scene_id": "LC81970242017165LGN00",
+        "landsat:collection_category": "T1",
+        "landsat:collection_number": "02",
+        "eo:bands": [
+            {
+                "name": "B1",
+                "common_name": "coastal",
+                "gsd": 30,
+                "center_wavelength": 0.44
+            },
+            {
+                "name": "B2",
+                "common_name": "blue",
+                "gsd": 30,
+                "center_wavelength": 0.48
+            },
+            {
+                "name": "B3",
+                "common_name": "green",
+                "gsd": 30,
+                "center_wavelength": 0.56
+            },
+            {
+                "name": "B4",
+                "common_name": "red",
+                "gsd": 30,
+                "center_wavelength": 0.66
+            },
+            {
+                "name": "B5",
+                "common_name": "nir08",
+                "gsd": 30,
+                "center_wavelength": 0.87
+            },
+            {
+                "name": "B6",
+                "common_name": "swir16",
+                "gsd": 30,
+                "center_wavelength": 1.61
+            },
+            {
+                "name": "B7",
+                "common_name": "swir22",
+                "gsd": 30,
+                "center_wavelength": 2.2
+            },
+            {
+                "name": "B8",
+                "common_name": "pan",
+                "gsd": 30,
+                "center_wavelength": 0.59
+            },
+            {
+                "name": "B9",
+                "common_name": "cirrus",
+                "gsd": 30,
+                "center_wavelength": 1.37
+            },
+            {
+                "name": "B10",
+                "common_name": "tir11",
+                "gsd": 30,
+                "center_wavelength": 10.9
+            },
+            {
+                "name": "B11",
+                "common_name": "tir12",
+                "gsd": 30,
+                "center_wavelength": 12.01
+            }
+        ]
+    },
+    "assets": {
+        "thumbnail": {
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_thumb_small.jpeg",
+            "title": "Thumbnail image",
+            "type": "image/jpeg"
+        },
+        "reduced_resolution_browse": {
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_thumb_large.jpeg",
+            "title": "Reduced resolution browse image",
+            "type": "image/jpeg"
+        },
+        "index": {
+            "href": "https://landsatlook.usgs.gov/stac-browser/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1",
+            "title": "HTML index page",
+            "type": "text/html"
+        },
+        "B1.TIF": {
+            "title": "Coastal/Aerosol Band (B1)",
+            "description": "Collection 2 Level-1 Coastal/Aerosol Band (B1) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                0
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B1.TIF"
+        },
+        "B2.TIF": {
+            "title": "Blue Band (B2)",
+            "description": "Collection 2 Level-1 Blue Band (B2) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                1
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B2.TIF"
+        },
+        "B3.TIF": {
+            "title": "Green Band (B3)",
+            "description": "Collection 2 Level-1 Green Band (B3) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                2
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B3.TIF"
+        },
+        "B4.TIF": {
+            "title": "Red Band (B4)",
+            "description": "Collection 2 Level-1 Red Band (B4) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                3
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B4.TIF"
+        },
+        "B5.TIF": {
+            "title": "Near Infrared Band 0.8 (B5)",
+            "description": "Collection 2 Level-1 Near Infrared Band 0.8 (B5) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                4
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B5.TIF"
+        },
+        "B6.TIF": {
+            "title": "Short-wave Infrared Band 1.6 (B6)",
+            "description": "Collection 2 Level-1 Short-wave Infrared Band 1.6 (B6) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                5
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B6.TIF"
+        },
+        "B7.TIF": {
+            "title": "Short-wave Infrared Band 2.2 (B7)",
+            "description": "Collection 2 Level-1 Short-wave Infrared Band 2.2 (B7) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                6
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B7.TIF"
+        },
+        "B8.TIF": {
+            "title": "Panchromatic Band (B8)",
+            "description": "Collection 2 Level-1 Panchromatic Band (B8) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                7
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B8.TIF"
+        },
+        "B9.TIF": {
+            "title": "Cirrus Band (B9)",
+            "description": "Collection 2 Level-1 Cirrus Band (B9) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                8
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B9.TIF"
+        },
+        "B10.TIF": {
+            "title": "Thermal Infrared Band 10.9 (B10)",
+            "description": "Collection 2 Level-1 Thermal Infrared Band 10.9 (B10) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                9
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B10.TIF"
+        },
+        "B11.TIF": {
+            "title": "Thermal Infrared Band Band 12.0 (B11)",
+            "description": "Collection 2 Level-1 Thermal Infrared Band 12.0 (B11) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "eo:bands": [
+                10
+            ],
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_B11.TIF"
+        },
+        "ANG.txt": {
+            "title": "Angle Coefficients File",
+            "description": "Collection 2 Level-1 Angle Coefficients File (ANG) Top of Atmosphere Radiance",
+            "type": "text/plain",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_ANG.txt"
+        },
+        "MTL.txt": {
+            "title": "Product Metadata File",
+            "description": "Collection 2 Level-1 Product Metadata File (MTL) Top of Atmosphere Radiance",
+            "type": "text/plain",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.txt"
+        },
+        "MTL.xml": {
+            "title": "Product Metadata File (xml)",
+            "description": "Collection 2 Level-1 Product Metadata File (xml) Top of Atmosphere Radiance",
+            "type": "application/xml",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.xml"
+        },
+        "MTL.json": {
+            "title": "Product Metadata File (json)",
+            "description": "Collection 2 Level-1 Product Metadata File (json) Top of Atmosphere Radiance",
+            "type": "application/json",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.json"
+        },
+        "QA_PIXEL.TIF": {
+            "title": "Quality Assessment Band",
+            "description": "Collection 2 Level-1 Quality Assessment Band (QA_PIXEL) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_QA_PIXEL.TIF"
+        },
+        "QA_RADSAT.TIF": {
+            "title": "Radiometric Saturation Quality Assessment Band",
+            "description": "Radiometric Saturation Quality Assessment Band Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_QA_RADSAT.TIF"
+        },
+        "VAA.TIF": {
+            "title": "Sensor Azimuth Angle Band (B4)",
+            "description": "Collection 2 Level-1 Sensor Azimuth Angle Band (B4) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_VAA.TIF"
+        },
+        "VZA.TIF": {
+            "title": "Sensor Zenith Angle Band (B4)",
+            "description": "Collection 2 Level-1 Sensor Zenith Angle Band (B4) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_VZA.TIF"
+        },
+        "SAA.TIF": {
+            "title": "Solar Azimuth Angle Band (B4)",
+            "description": "Collection 2 Level-1 Solar Azimuth Angle Band (B4) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_SAA.TIF"
+        },
+        "SZA.TIF": {
+            "title": "Solar Zenith Angle Band (B4)",
+            "description": "Collection 2 Level-1 Solar Zenith Angle Band (B4) Top of Atmosphere Radiance",
+            "type": "image/vnd.stac.geotiff; cloud-optimized=true",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_SZA.TIF"
+        }
+    },
+    "links": [
+        {
+            "rel": "root",
+            "href": "https://landsatlook.usgs.gov/data/catalog.json"
+        },
+        {
+            "rel": "parent",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/catalog.json"
+        },
+        {
+            "rel": "collection",
+            "href": "https://landsatlook.usgs.gov/data/collection02/landsat-c2l1.json"
+        },
+        {
+            "rel": "self",
+            "href": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/2017/197/024/LC08_L1TP_197024_20170614_20200903_02_T1/LC08_L1TP_197024_20170614_20200903_02_T1_stac.json"
+        }
+    ],
+    "collection": "landsat-c2l1"
+}
