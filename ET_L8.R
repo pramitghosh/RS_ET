@@ -77,35 +77,35 @@ DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
 surface.model = METRICtopo(DEM)
 solar.angles.r = solarAngles(surface.model = surface.model, WeatherStation = WeatherStation, MTL = MTLfile)
 plot(solar.angles.r)
-# 
-# # Calculate incident SW radiation, TOA reflectance, Surface reflectance and albedo
-# Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
-# image.TOAr = calcTOAr(image.DN = L7, sat = "L7", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
+
+# Calculate incident SW radiation, TOA reflectance, Surface reflectance and albedo
+Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
+image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
 # image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
-# albedo = albedo(image.SR = image.SR, coeff = "Tasumi", sat = "L7")
-# 
-# # Calculate LAI
-# LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
-# plot(LAI)
-# 
-# # Calculate Surface temperature, Incident and Outgoing LW radiation
-# Ts = surfaceTemperature(image.DN = L7, LAI = LAI, sat = "L7", WeatherStation = WeatherStation, aoi = aoi)
-# Rl.out = outLWradiation(LAI = LAI, Ts = Ts)
-# Rl.inc = incLWradiation(WeatherStation = WeatherStation, DEM = surface.model$DEM, solar.angles = solar.angles.r, Ts = Ts)
-# 
-# # Calculate Net radiation
-# Rn = netRadiation(LAI, albedo, Rs.inc, Rl.inc, Rl.out)
-# plot(Rn)
-# 
-# # Calculate Soil Heat flux
-# G = soilHeatFlux(image = L7, Ts = Ts, albedo = albedo, Rn = Rn, LAI = LAI)
-# plot(G)
-# 
-# # Calculate Sensible Heat flux
-# Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
-# hot.and.cold = calcAnchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "CITRA-MCB", deltaTemp = 5, WeatherStation = WeatherStation, verbose = TRUE)
-# H = calcH(anchors = hot.and.cold, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
-# 
+albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
+
+# Calculate LAI
+LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
+plot(LAI)
+ 
+# Calculate Surface temperature, Incident and Outgoing LW radiation
+Ts = surfaceTemperature(image.DN = L8, LAI = LAI, sat = "L8", WeatherStation = WeatherStation, aoi = aoi, method = "SW")
+Rl.out = outLWradiation(LAI = LAI, Ts = Ts)
+Rl.inc = incLWradiation(WeatherStation = WeatherStation, DEM = surface.model$DEM, solar.angles = solar.angles.r, Ts = Ts)
+
+# Calculate Net radiation
+Rn = netRadiation(LAI, albedo, Rs.inc, Rl.inc, Rl.out)
+plot(Rn)
+
+# Calculate Soil Heat flux
+G = soilHeatFlux(image = L8.SR, Ts = Ts, albedo = albedo, Rn = Rn, LAI = LAI)
+plot(G)
+
+# Calculate Sensible Heat flux
+Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
+hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 1, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
+H = calcH(anchors = hot.and.cold, mountainous = FALSE, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
+
 # # Calculate 24h evapotranspiration
 # ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
 # ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
