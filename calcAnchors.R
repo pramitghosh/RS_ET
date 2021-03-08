@@ -1,4 +1,4 @@
-calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.method = "flexible", 
+calculate_anchors = function (image, Ts, LAI, albedo, Rn, G, Z.om, n = 1, aoi, anchors.method = "flexible", 
           WeatherStation, plots = TRUE, deltaTemp = 5, minDist = 500, 
           WSbuffer = 30000, verbose = FALSE) 
 {
@@ -211,7 +211,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
       values(NDVI >= max(values(NDVI), na.rm = T) - 0.15) & 
       values(Z.om >= optValCold$Z.om[1]) & values(Z.om <= 
                                                     optValCold$Z.om[2]) & values(Ts < (minT + deltaTemp)) & 
-      values(WS.buffer == 1)
+      values(WS.buffer == 1) &
+      values(!is.na(Rn)) & values(!is.na(G))
     cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
     useBuffer <- TRUE
     flex <- 0
@@ -224,7 +225,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(NDVI >= max(values(NDVI), na.rm = T) - 
                  0.15) & values(Z.om >= optValCold$Z.om[1]) & 
         values(Z.om <= optValCold$Z.om[2]) & values(Ts < 
-                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer))
+                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer)) &
+        values(!is.na(Rn)) & values(!is.na(G))
       cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
       useBuffer <- !useBuffer
       flex <- flex + 0.1
@@ -240,7 +242,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(NDVI >= max(values(NDVI), na.rm = T) - 
                  0.15) & values(Z.om >= optValCold$Z.om[1]) & 
         values(Z.om <= optValCold$Z.om[2]) & values(Ts < 
-                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer))
+                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer)) &
+        values(!is.na(Rn)) & values(!is.na(G))
       cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
       optValCold[1, ] <- optValColdBck[1, ] * c(1, (1 - 
                                                       flex), 1)
@@ -252,7 +255,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(NDVI >= max(values(NDVI), na.rm = T) - 
                  0.15) & values(Z.om >= optValCold$Z.om[1]) & 
         values(Z.om <= optValCold$Z.om[2]) & values(Ts < 
-                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer))
+                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer)) &
+        values(!is.na(Rn)) & values(!is.na(G))
       cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
       optValCold[1, ] <- optValColdBck[1, ] * c(1, 1, (1 - 
                                                          flex))
@@ -264,7 +268,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(NDVI >= max(values(NDVI), na.rm = T) - 
                  0.15) & values(Z.om >= optValCold$Z.om[1]) & 
         values(Z.om <= optValCold$Z.om[2]) & values(Ts < 
-                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer))
+                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer)) &
+        values(!is.na(Rn)) & values(!is.na(G))
       cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
       optValCold[1, ] <- optValColdBck[1, ] * (1 - flex)
       optValCold[2, ] <- optValColdBck[2, ] * (1 + flex)
@@ -274,7 +279,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(NDVI >= max(values(NDVI), na.rm = T) - 
                  0.15) & values(Z.om >= optValCold$Z.om[1]) & 
         values(Z.om <= optValCold$Z.om[2]) & values(Ts < 
-                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer))
+                                                      (minT + deltaTemp)) & values(WS.buffer == as.numeric(useBuffer)) &
+        values(!is.na(Rn)) & values(!is.na(G))
       cold.n <- sum(as.numeric(cold.candidates), na.rm = T)
       if (flex >= 10) {
         stop("Automatic selection of cold anchors FAILED")
@@ -293,7 +299,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
       values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                        optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
       values(Z.om <= optValHot$Z.om[2]) & values(Ts > (optValHot$Ts[1])) & 
-      values(WS.buffer == 1)
+      values(WS.buffer == 1) &
+      values(!is.na(Rn)) & values(!is.na(G))
     hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
     useBuffer <- TRUE
     flex <- 0
@@ -304,7 +311,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       useBuffer <- !useBuffer
       flex <- flex + 0.1
@@ -318,7 +326,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       optValHot[1, ] <- optValHotBck[1, ] * c(1, (1 - flex), 
                                               1, 1)
@@ -328,7 +337,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       optValHot[1, ] <- optValHotBck[1, ] * c(1, 1, (1 - 
                                                        flex), 1)
@@ -338,7 +348,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       optValHot[1, ] <- optValHotBck[1, ] * c(1, 1, 1, 
                                               (1 - flex))
@@ -348,7 +359,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       optValHot[1, ] <- optValHotBck[1, ] * (1 - flex)
       optValHot[2, ] <- optValHotBck[2, ] * (1 + flex)
@@ -356,7 +368,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
         values(albedo <= optValHot$albedo[2]) & values(NDVI >= 
                                                          optValHot$NDVI[1]) & values(NDVI <= optValHot$NDVI[2]) & 
         values(Z.om <= optValHot$Z.om[2]) & values(Ts > 
-                                                     (optValHot$Ts[1])) & values(WS.buffer == 1)
+                                                     (optValHot$Ts[1])) & values(WS.buffer == 1) &
+        values(!is.na(Rn)) & values(!is.na(G))
       hot.n <- sum(as.numeric(hot.candidates), na.rm = T)
       if (flex >= 10) {
         stop("Automatic selection of hot anchors FAILED")
@@ -392,7 +405,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
                                                                                               0.25) & values(NDVI >= max(values(NDVI), na.rm = T) - 
                                                                                                                0.15) & values(Z.om >= 0.03) & values(Z.om <= 
                                                                                                                                                        0.08) & values(Ts < (minT + deltaTemp)) & values(distbuffer == 
-                                                                                                                                                                                                          1) & values(WS.buffer == 1)
+                                                                                                                                                                                                          1) & values(WS.buffer == 1) &
+                  values(!is.na(Rn)) & values(!is.na(G))
         values(Ts.cold)[!cold.candidates] <- NA
         if (length(which(cold.candidates)) < 2) {
           warning(paste("I can only find ", nsample, 
@@ -420,7 +434,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Z.om, n = 1, aoi, anchors.
                                                             0.15) & values(NDVI >= 0.1) & values(NDVI <= 
                                                                                                    0.28) & values(distbuffer == 1) & values(Z.om <= 
                                                                                                                                               0.005) & values(Ts > (maxT - deltaTemp)) & 
-          values(WS.buffer == 1)
+          values(WS.buffer == 1) &
+          values(!is.na(Rn)) & values(!is.na(G))
         values(Ts.hot)[!hot.candidates] <- NA
         if (length(which(hot.candidates)) < 2) {
           warning(paste("I can only find ", nsample, 

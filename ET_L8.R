@@ -103,13 +103,13 @@ plot(G)
 
 # Calculate Sensible Heat flux
 Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
-hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 1, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
+hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, Rn = Rn, G = G, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 1, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
 H = calcH(anchors = hot.and.cold, mountainous = FALSE, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
 
-# # Calculate 24h evapotranspiration
-# ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
-# ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
-# 
+# Calculate 24h evapotranspiration
+ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
+ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
+
 # 
 # # # For simple method
 # # Energy.Balance = METRIC.EB(image.DN = L7, plain = TRUE, WeatherStation = WeatherStation, ETp.coef = 1.2, MTL = MTLfile, n = 5, sat = "L7", thermalband = L7$Thermal1, aoi = aoi)

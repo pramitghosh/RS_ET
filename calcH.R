@@ -244,8 +244,8 @@ calculate_sensibleHeat = function (anchors, method = "mean", Ts, Z.om, WeatherSt
       }
     }
   }
-  dT <- saveLoadClean(imagestack = dT, file = "dT", overwrite = TRUE)
-  H <- saveLoadClean(imagestack = H, file = "H", overwrite = TRUE)
+  dT <- water:::saveLoadClean(imagestack = dT, file = "dT", overwrite = TRUE)
+  H <- water:::saveLoadClean(imagestack = H, file = "H", overwrite = TRUE)
   result$a <- a
   result$b <- b
   result$dT <- dT
