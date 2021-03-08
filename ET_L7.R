@@ -17,11 +17,11 @@ utm_y = 5758499.100
 aoi = createAoi(topleft = c(utm_x - 25000, utm_y + 25000), bottomright = c(utm_x + 25000, utm_y - 25000), EPSG = 32632)
 
 # Read weather station data
-rain = read_csv("data/Precipitation-data-2021-03-04 11_24_21.csv")
-radiation = read_csv("data/Radiation-data-2021-03-04 11_28_37.csv")
-humidity = read_csv("data/Relative humidity-data-2021-03-04 11_27_31.csv")
-temperature = read_csv("data/Temperature-data-2021-03-04 11_26_27.csv")
-wind = read_csv("data/Wind velocity-data-2021-03-04 11_27_06.csv")
+rain = read_csv("data/weather_27-07-2018/Precipitation-data-2021-03-04 11_24_21.csv")
+radiation = read_csv("data/weather_27-07-2018/Radiation-data-2021-03-04 11_28_37.csv")
+humidity = read_csv("data/weather_27-07-2018/Relative humidity-data-2021-03-04 11_27_31.csv")
+temperature = read_csv("data/weather_27-07-2018/Temperature-data-2021-03-04 11_26_27.csv")
+wind = read_csv("data/weather_27-07-2018/Wind velocity-data-2021-03-04 11_27_06.csv")
 
 # Prepare Weather Station data
 weather_list = list(rain, radiation, humidity, temperature, wind)
@@ -33,7 +33,7 @@ weather = cbind(weather_time, weather)
 colnames(weather) = c("time", "date", "precipitation", "radiation", "rel_humidity", "temperature", "wind_vel")
 
 # Plot weather data at satellite overpass
-MTLfile = file("data/C1/LE07_L1TP_197024_20180727_20180822_01_T1_MTL.txt")
+MTLfile = file("data/L7_C1/LE07_L1TP_197024_20180727_20180822_01_T1_MTL.txt")
 WeatherStation = read.WSdata(WSdata = weather, date.format = "%d/%m/%Y", lat = 51.968791, long = 7.59513, elev = 60, height = 2, columns = c("date" = 2, "time" = 1, "radiation" = 4, "wind" = 7, "RH" = 5, "temp" = 6, "rain" = 3), MTL = MTLfile)
 print(WeatherStation)
 plot(WeatherStation, hourly = TRUE)
@@ -49,7 +49,7 @@ plot(WeatherStation, hourly = TRUE)
 # L7_SWIR2 = raster("data/C1/LE07_L1TP_197024_20180727_20180822_01_T1_B7.TIF")
 
 # L7 = brick(L7_B, L7_G, L7_R, L7_NIR, L7_SWIR1, L7_Thermal, L7_SWIR2)
-L7 = loadImage(path = "data/C1/", sat = "L7", aoi = aoi)
+L7 = loadImage(path = "data/L7_C1/", sat = "L7", aoi = aoi)
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L7)
 
 # Calculate solar angles
