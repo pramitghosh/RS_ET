@@ -13,8 +13,8 @@ calculate_anchors = function (image, Ts, LAI, albedo, Rn, G, Z.om, n = 1, aoi, a
     anchors.method <- "random"
   }
   NDVI <- (image$NIR - image$R)/(image$NIR + image$R)
-  NDVI[NDVI < -1] <- -1
-  NDVI[NDVI > 1] <- 1
+  NDVI[NDVI < -1] <- NA
+  NDVI[NDVI > 1] <- NA
   if (!missing(WeatherStation)) {
     WSloc <- WeatherStation$location
     coordinates(WSloc) <- ~long + lat
@@ -488,3 +488,4 @@ calculate_anchors = function (image, Ts, LAI, albedo, Rn, G, Z.om, n = 1, aoi, a
   }
   return(hot.and.cold)
 }
+

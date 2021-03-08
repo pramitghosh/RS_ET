@@ -70,7 +70,13 @@ loadSR = function (path = getwd(), aoi)
 }
 
 L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
+L8 = remove_negatives(L8)
+plot(L8)
+
 L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
+L8.SR = remove_negatives(L8.SR)[[1:6]]/10000
+plot(L8.SR)
+
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
 
 # Calculate solar angles
@@ -118,4 +124,4 @@ ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS
 # # ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
 # # ET.24s = ET24h(Rn = Energy.Balance$EB$NetRadiation, G = Energy.Balance$EB$SoilHeat, H = Energy.Balance$EB$SensibleHeat, Ts = Energy.Balance$EB$surfaceTemperature, WeatherStation = WeatherStation, ETr.daily = ET_WS)
 
-# Energy.Balance = METRIC.EB(image.DN = L8, image.SR = L8.SR, WeatherStation = WeatherStation, MTL = MTLfile, sat = "L8", DEM = DEM, aoi = aoi, alb.coeff = "Olmedo", LST.method = "SW", LAI.method = "metric2010", n = 5, ETp.coef = 1.2, Z.om.ws = 0.03, verbose = TRUE)
+Energy.Balance = METRIC.EB(image.DN = L8, image.SR = L8.SR, WeatherStation = WeatherStation, MTL = MTLfile, sat = "L8", DEM = DEM, aoi = aoi, alb.coeff = "Olmedo", LST.method = "SW", LAI.method = "metric2010", n = 1, ETp.coef = 1.2, Z.om.ws = 0.03, verbose = TRUE)
