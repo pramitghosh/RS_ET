@@ -6,6 +6,6 @@ set_to_NA = function(rasterlayer)
 
 remove_negatives = function(rasterbrick)
 {
-  bands = lapply(rasterbrick, set_to_NA)
+  bands = lapply(as.list(rasterbrick), set_to_NA)
   brick(bands)
 }
