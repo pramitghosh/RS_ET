@@ -86,7 +86,7 @@ hot.and.cold = calcAnchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = a
 H = calcH(anchors = hot.and.cold, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
 
 # Calculate 24h evapotranspiration
-ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
+ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2, ET = "ETo")
 ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
 
 
