@@ -50,31 +50,12 @@ plot(WeatherStation, hourly = TRUE)
 
 # L7 = brick(L7_B, L7_G, L7_R, L7_NIR, L7_SWIR1, L7_Thermal, L7_SWIR2)
 
-# Modified water::loadImageSR() with correct filename pattern
-loadSR = function (path = getwd(), aoi) 
-{
-  files <- list.files(path = path, pattern = "_SR_B+[2-7].TIF$", 
-                      full.names = T)
-  stack1 <- list()
-  for (i in 1:6) {
-    stack1[i] <- raster(files[i])
-  }
-  image_SR <- do.call(stack, stack1)
-  image_SR <- water:::aoiCrop(image_SR, aoi)
-  image_SR <- image_SR/10000
-  bandnames <- c("B", "G", "R", "NIR", 
-                 "SWIR1", "SWIR2")
-  image_SR <- water:::saveLoadClean(imagestack = image_SR, stack.names = bandnames, 
-                            file = "image_SR", overwrite = TRUE)
-  return(image_SR)
-}
-
 L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
 L8 = remove_negatives(L8)
 plot(L8)
 
 L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
-L8.SR = remove_negatives(L8.SR)[[1:6]]
+L8.SR = remove_negatives(L8.SR)
 plot(L8.SR)
 
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
