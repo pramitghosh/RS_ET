@@ -1,8 +1,5 @@
 library(jsonlite)
 
-albedo_coeffs_grass_mult = c(2.153642, -2.242688, -0.520669,  0.622670,  0.129979, -0.047970,  0.152228)
-albedo_coeffs_grass_add = 0.058674
-
 L8_SR = function(L8.SR)
 {
   L2_MTL_JSON_path = file("data/L8_C2/SR/LC08_L2SP_197024_20170614_20200903_02_T1_MTL.json")
@@ -28,5 +25,17 @@ albedo.daSilva = function(sr_scaled)
   for(i in 3:7)
     albedo_daSilva = albedo_daSilva + (sr_scaled[[i]] * albedo_coeffs_daSilva[i-1])
   
-  albedo_daSilva
-}  
+  set_to_NA(albedo_daSilva)
+}
+
+albedo.grass = function(sr_scaled)
+{
+  albedo_coeffs_grass_mult = c(2.153642, -2.242688, -0.520669,  0.622670,  0.129979, -0.047970,  0.152228)
+  albedo_coeffs_grass_add = 0.058674
+  
+  albedo_grass = albedo_coeffs_grass_add + (sr_scaled[[1]] * albedo_coeffs_grass_mult[1])
+  for(i in 2:7)
+    albedo_grass = albedo_grass + (sr_scaled[[i]] * albedo_coeffs_grass_mult[i])
+  
+  set_to_NA(albedo_grass)
+}
