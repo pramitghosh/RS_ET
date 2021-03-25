@@ -50,12 +50,16 @@ plot(WeatherStation, hourly = TRUE)
 
 # L7 = brick(L7_B, L7_G, L7_R, L7_NIR, L7_SWIR1, L7_Thermal, L7_SWIR2)
 
+source("remove_negatives.R")
 L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
 L8 = remove_negatives(L8)
 plot(L8)
 
+source("loadSR.R")
+source("calcAlbedo.R")
 L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
 L8.SR = remove_negatives(L8.SR)
+L8.SR = L8_SR(L8.SR)
 plot(L8.SR)
 
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
@@ -69,8 +73,10 @@ plot(solar.angles.r)
 Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
 image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
 # image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
-albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
-albedo = albedo - 1 #To compensate for too high albedo! (needs more investigation)
+# albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
+# albedo = albedo - 1 #To compensate for too high albedo! (needs more investigation)
+albedo = albedo.daSilva(L8.SR)
+plot(albedo)
 
 # Calculate LAI
 LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
@@ -91,7 +97,8 @@ plot(G)
 
 # Calculate Sensible Heat flux
 Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
-hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, Rn = Rn, G = G, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "best", WeatherStation = WeatherStation, verbose = TRUE)
+# hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, Rn = Rn, G = G, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "best", WeatherStation = WeatherStation, verbose = TRUE)
+hot.and.cold = calcAnchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
 H = calcH(anchors = hot.and.cold, mountainous = FALSE, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
 
 # Calculate 24h evapotranspiration
