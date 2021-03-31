@@ -159,7 +159,7 @@ ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513
 ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
 ```
 
-## Validation
+## Comparing evapotranspiration for different LULC classes
 
 ```{r}
 source("validation.R")
