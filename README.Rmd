@@ -1,0 +1,162 @@
+---
+title: "Calculating evapotranspiration using remotely sensed data"
+author: "Pramit Ghosh"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading required packages
+```{r}
+library(water)
+library(readr)
+```
+
+## Define Area of Interest (AOI)
+```{r}
+# Create AOI (625 sq.km. centered on Muenster FHZ weather station)
+utm_x = 403490.150
+utm_y = 5758499.100
+aoi = createAoi(topleft = c(utm_x - 25000, utm_y + 25000), bottomright = c(utm_x + 25000, utm_y - 25000), EPSG = 32632)
+```
+
+## Read Weather Station data
+```{r}
+source("utilities.R")
+
+rain = "data/weather_14-06-2017/Precipitation-data-2021-03-08 12_15_07.csv"
+radiation = "data/weather_14-06-2017/Radiation-data-2021-03-08 12_17_32.csv"
+humidity = "data/weather_14-06-2017/Relative humidity-data-2021-03-08 12_16_26.csv"
+temperature = "data/weather_14-06-2017/Temperature-data-2021-03-08 12_15_39.csv"
+wind = "data/weather_14-06-2017/Wind velocity-data-2021-03-08 12_16_05.csv"
+
+weather = read_WS(rain, radiation, humidity, temperature, wind)
+
+weather_time = format(weather$Time, format = "%H:%M:%S")
+weather$Time = format(weather$Time, format = "%d/%m/%Y")
+weather = cbind(weather_time, weather)
+colnames(weather) = c("time", "date", "precipitation", "radiation", "rel_humidity", "temperature", "wind_vel")
+
+```
+
+## Calculate data values at satellite overpass
+
+```{r}
+MTLfile = "data/L8_C2/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.txt"
+WeatherStation = sat_overpass(L8_L2_MTL = MTLfile, weather = weather, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
+```
+
+## Load Landsat 8 Level-2 data
+```{r}
+source("remove_negatives.R")
+L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
+L8 = remove_negatives(L8)
+plot(L8)
+```
+
+## Load Surface Reflectance data
+```{r}
+source("loadSR.R")
+source("calcAlbedo.R")
+L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
+L8.SR = remove_negatives(L8.SR)
+L8.SR = L8_SR(L8.SR)
+plot(L8.SR)
+```
+
+## Load Digital Elevation Model
+```{r}
+checkSRTMgrids(L8)
+DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
+plot(DEM)
+```
+
+## Calculate solar angles
+```{r}
+surface.model = METRICtopo(DEM)
+solar.angles.r = solarAngles(surface.model = surface.model, WeatherStation = WeatherStation, MTLfile)
+plot(solar.angles.r)
+```
+
+## Calculate intermediate results
+
+### Calculate incident short-wave radiation
+```{r}
+Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
+plot(Rs.inc)
+```
+
+### Calculate Top-of-Atmosphere reflectance
+```{r}
+image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
+plot(image.TOAr)
+
+# image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
+```
+### Calculate Albedo
+```{r}
+# albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
+# albedo = albedo - 1 #To compensate for too high albedo! (needs more investigation)
+albedo = albedo.daSilva(L8.SR)
+plot(albedo)
+```
+
+## Calculate Leaf Area Index
+```{r}
+LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
+plot(LAI)
+```
+
+## Calculate further intermediate results
+```{r}
+source("calcLST.R")
+```
+
+### Calculate Surface Temperature
+```{r}
+L8.ST = loadST(path = "data/L8_C2/SR/", aoi = aoi)
+Ts = calcLST(L8.ST) 
+# Ts = surfaceTemperature(image.DN = L8, LAI = LAI, sat = "L8", WeatherStation = WeatherStation, aoi = aoi, method = "SW")
+plot(Ts)
+```
+
+### Calculate incident and outgoing long-wave radiation
+```{r}
+Rl.out = outLWradiation(LAI = LAI, Ts = Ts)
+Rl.inc = incLWradiation(WeatherStation = WeatherStation, DEM = surface.model$DEM, solar.angles = solar.angles.r, Ts = Ts)
+plot(Rl.out)
+plot(Rl.inc)
+```
+
+## Calculate Net radiation
+```{r}
+Rn = netRadiation(LAI, albedo, Rs.inc, Rl.inc, Rl.out)
+plot(Rn)
+```
+
+## Calculate Soil Heat Flux
+```{r}
+G = soilHeatFlux(image = L8.SR, Ts = Ts, albedo = albedo, Rn = Rn, LAI = LAI)
+plot(G)
+```
+
+## Calculate Sensible Heat flux
+```{r}
+source("calcAnchors.R")
+
+Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
+hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, Rn = Rn, G = G, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
+# hot.and.cold = calcAnchors(image = image.TOAr, Ts, LAI, plots = TRUE, albedo = albedo, Z.om = Z.om, n = 5, anchors.method = "flexible", WeatherStation = WeatherStation, verbose = TRUE)
+H = calcH(anchors = hot.and.cold, mountainous = FALSE, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = 1.05, Z.om.ws = 0.03, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
+```
+
+## Calculate 24h evapotranspiration
+```{r}
+# Calculate 24h evapotranspiration
+ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
+ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
+```
+
+
