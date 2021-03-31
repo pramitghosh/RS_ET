@@ -4,5 +4,6 @@
 .Ruserdata
 data/**/*.TIF
 data/**/*.tif
+data/scratch/**
 results/**/*.tif
 results/**/*.TIF
