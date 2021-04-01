@@ -478,7 +478,12 @@ source("validation.R")
 ``` r
 leo_coords = c(403873.8,    5759162)
 leo_val = val_at_coords(image = ET.24, coord_pair = leo_coords)
+print(paste("24 hours ET value calculated at LEO Campus = ", leo_val, "mm", sep = ""))
+```
 
+    ## [1] "24 hours ET value calculated at LEO Campus = 2.24090746282385mm"
+
+``` r
 vpts = read_sf("results/pts.gpkg")
 pts_geom = st_geometry(vpts)
 ET_pts = lapply(X = pts_geom, FUN = function(x, img) val_at_coords(as.numeric(x), img), ET.24)
@@ -486,7 +491,7 @@ val_results = as.data.frame(cbind(vpts$LULC, as.numeric(unlist(ET_pts))))
 val_results$V2 = as.numeric(val_results$V2)
 colnames(val_results) = c("LULC", "ET")
 
-boxplot(val_results$ET ~ val_results$LULC, main = "Daily evapotranspiration for different LULC classes", xlab = "LULC class", ylab = "Evapotranspiration (mm)")
+boxplot(val_results$ET ~ val_results$LULC, main = "Daily evapotranspiration for different LULC classes", sub = "(20 samples per class)", xlab = "LULC class", ylab = "Evapotranspiration (mm)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
