@@ -43,7 +43,7 @@ colnames(weather) = c("time", "date", "precipitation", "radiation", "rel_humidit
 
 ## Calculate data values at satellite overpass
 
-```{r}
+```{r fig.width=10}
 MTLfile = "data/L8_C2/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.txt"
 WeatherStation = sat_overpass(L8_L2_MTL = MTLfile, weather = weather, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
 ```
@@ -53,7 +53,7 @@ WeatherStation = sat_overpass(L8_L2_MTL = MTLfile, weather = weather, lat = 51.9
 source("remove_negatives.R")
 L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
 L8 = remove_negatives(L8)
-plot(L8)
+# plot(L8)
 ```
 
 ## Load Surface Reflectance data
@@ -63,50 +63,50 @@ source("calcAlbedo.R")
 L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
 L8.SR = remove_negatives(L8.SR)
 L8.SR = L8_SR(L8.SR)
-plot(L8.SR)
+# plot(L8.SR)
 ```
 
 ## Load Digital Elevation Model
-```{r}
+```{r fig.width=10}
 checkSRTMgrids(L8)
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
-plot(DEM)
+plot(DEM, main = "Digital Elevation Model", legend.args = list(text = 'Elevation (m)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate solar angles
 ```{r}
 surface.model = METRICtopo(DEM)
 solar.angles.r = solarAngles(surface.model = surface.model, WeatherStation = WeatherStation, MTLfile)
-plot(solar.angles.r)
+# plot(solar.angles.r)
 ```
 
 ## Calculate intermediate results
 
 ### Calculate incident short-wave radiation
-```{r}
+```{r fig.width=10}
 Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
-plot(Rs.inc)
+plot(Rs.inc, main = "Incident short-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ### Calculate Top-of-Atmosphere reflectance
 ```{r}
 image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
-plot(image.TOAr)
+# plot(image.TOAr)
 
 # image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
 ```
 ### Calculate Albedo
-```{r}
+```{r fig.width=10}
 # albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
 # albedo = albedo - 1 #To compensate for too high albedo! (needs more investigation)
 albedo = albedo.daSilva(L8.SR)
-plot(albedo)
+plot(albedo, main = "Albedo", legend.args = list(text = 'Albedo'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate Leaf Area Index
-```{r}
+```{r fig.width=10}
 LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
-plot(LAI)
+plot(LAI, main = "Leaf Area Index", legend.args = list(text = 'LAI (m/m)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate further intermediate results
@@ -115,35 +115,37 @@ source("calcLST.R")
 ```
 
 ### Calculate Surface Temperature
-```{r}
+```{r fig.width=10}
+source("calcLST.R")
+
 L8.ST = loadST(path = "data/L8_C2/SR/", aoi = aoi)
 Ts = calcLST(L8.ST) 
 # Ts = surfaceTemperature(image.DN = L8, LAI = LAI, sat = "L8", WeatherStation = WeatherStation, aoi = aoi, method = "SW")
-plot(Ts)
+plot(Ts, main = "Surface Temperature", legend.args = list(text = 'Temperature (K)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ### Calculate incident and outgoing long-wave radiation
-```{r}
+```{r fig.width=10}
 Rl.out = outLWradiation(LAI = LAI, Ts = Ts)
 Rl.inc = incLWradiation(WeatherStation = WeatherStation, DEM = surface.model$DEM, solar.angles = solar.angles.r, Ts = Ts)
-plot(Rl.out)
-plot(Rl.inc)
+plot(Rl.out, main = "Outgoing long-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
+plot(Rl.inc, main = "Incoming long-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate Net radiation
-```{r}
+```{r fig.width=10}
 Rn = netRadiation(LAI, albedo, Rs.inc, Rl.inc, Rl.out)
-plot(Rn)
+plot(Rn, main = "Net Radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate Soil Heat Flux
-```{r}
+```{r fig.width=10}
 G = soilHeatFlux(image = L8.SR, Ts = Ts, albedo = albedo, Rn = Rn, LAI = LAI)
-plot(G)
+plot(G, main = "Soil Heat Flux", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ## Calculate Sensible Heat flux
-```{r}
+```{r fig.width=10}
 source("calcAnchors.R")
 
 Z.om = momentumRoughnessLength(LAI = LAI, mountainous = FALSE, method = "short.crops", surface.model = surface.model)
@@ -153,7 +155,7 @@ H = calcH(anchors = hot.and.cold, mountainous = FALSE, Ts = Ts, Z.om = Z.om, Wea
 ```
 
 ## Calculate 24h evapotranspiration
-```{r}
+```{r fig.width=10}
 # Calculate 24h evapotranspiration
 ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
 ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
@@ -161,7 +163,7 @@ ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS
 
 ## Comparing evapotranspiration for different LULC classes
 
-```{r}
+```{r fig.width=10}
 source("validation.R")
 
 leo_coords = c(403873.8,	5759162)
@@ -174,7 +176,7 @@ val_results = as.data.frame(cbind(vpts$LULC, as.numeric(unlist(ET_pts))))
 val_results$V2 = as.numeric(val_results$V2)
 colnames(val_results) = c("LULC", "ET")
 
-boxplot(val_results$ET ~ val_results$LULC)
+boxplot(val_results$ET ~ val_results$LULC, main = "Daily evapotranspiration for different LULC classes", xlab = "LULC class", ylab = "Evapotranspiration (mm)")
 
 ```
 

@@ -161,10 +161,8 @@ L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
 
 ``` r
 L8 = remove_negatives(L8)
-plot(L8)
+# plot(L8)
 ```
-
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## Load Surface Reflectance data
 
@@ -198,10 +196,8 @@ L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
 ``` r
 L8.SR = remove_negatives(L8.SR)
 L8.SR = L8_SR(L8.SR)
-plot(L8.SR)
+# plot(L8.SR)
 ```
-
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ## Load Digital Elevation Model
 
@@ -221,7 +217,7 @@ checkSRTMgrids(L8)
 
 ``` r
 DEM = prepareSRTMdata(path = "data/SRTM_DEM/", extent = L8)
-plot(DEM)
+plot(DEM, main = "Digital Elevation Model", legend.args = list(text = 'Elevation (m)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -231,10 +227,8 @@ plot(DEM)
 ``` r
 surface.model = METRICtopo(DEM)
 solar.angles.r = solarAngles(surface.model = surface.model, WeatherStation = WeatherStation, MTLfile)
-plot(solar.angles.r)
+# plot(solar.angles.r)
 ```
-
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ## Calculate intermediate results
 
@@ -242,7 +236,7 @@ plot(solar.angles.r)
 
 ``` r
 Rs.inc = incSWradiation(surface.model = surface.model, solar.angles = solar.angles.r, WeatherStation = WeatherStation)
-plot(Rs.inc)
+plot(Rs.inc, main = "Incident short-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
@@ -251,12 +245,8 @@ plot(Rs.inc)
 
 ``` r
 image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
-plot(image.TOAr)
-```
+# plot(image.TOAr)
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-``` r
 # image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
 ```
 
@@ -266,7 +256,7 @@ plot(image.TOAr)
 # albedo = albedo(image.SR = L8.SR, coeff = "Olmedo", sat = "L8")
 # albedo = albedo - 1 #To compensate for too high albedo! (needs more investigation)
 albedo = albedo.daSilva(L8.SR)
-plot(albedo)
+plot(albedo, main = "Albedo", legend.args = list(text = 'Albedo'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
@@ -275,7 +265,7 @@ plot(albedo)
 
 ``` r
 LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
-plot(LAI)
+plot(LAI, main = "Leaf Area Index", legend.args = list(text = 'LAI (m/m)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
@@ -289,10 +279,12 @@ source("calcLST.R")
 ### Calculate Surface Temperature
 
 ``` r
+source("calcLST.R")
+
 L8.ST = loadST(path = "data/L8_C2/SR/", aoi = aoi)
 Ts = calcLST(L8.ST) 
 # Ts = surfaceTemperature(image.DN = L8, LAI = LAI, sat = "L8", WeatherStation = WeatherStation, aoi = aoi, method = "SW")
-plot(Ts)
+plot(Ts, main = "Surface Temperature", legend.args = list(text = 'Temperature (K)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
@@ -302,13 +294,13 @@ plot(Ts)
 ``` r
 Rl.out = outLWradiation(LAI = LAI, Ts = Ts)
 Rl.inc = incLWradiation(WeatherStation = WeatherStation, DEM = surface.model$DEM, solar.angles = solar.angles.r, Ts = Ts)
-plot(Rl.out)
+plot(Rl.out, main = "Outgoing long-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ``` r
-plot(Rl.inc)
+plot(Rl.inc, main = "Incoming long-wave radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
@@ -317,7 +309,7 @@ plot(Rl.inc)
 
 ``` r
 Rn = netRadiation(LAI, albedo, Rs.inc, Rl.inc, Rl.out)
-plot(Rn)
+plot(Rn, main = "Net Radiation", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
@@ -326,7 +318,7 @@ plot(Rn)
 
 ``` r
 G = soilHeatFlux(image = L8.SR, Ts = Ts, albedo = albedo, Rn = Rn, LAI = LAI)
-plot(G)
+plot(G, main = "Soil Heat Flux", legend.args = list(text = 'Radiation (W/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
@@ -475,7 +467,7 @@ ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS
 
 ![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-## Validation
+## Comparing evapotranspiration for different LULC classes
 
 ``` r
 source("validation.R")
@@ -494,7 +486,7 @@ val_results = as.data.frame(cbind(vpts$LULC, as.numeric(unlist(ET_pts))))
 val_results$V2 = as.numeric(val_results$V2)
 colnames(val_results) = c("LULC", "ET")
 
-boxplot(val_results$ET ~ val_results$LULC)
+boxplot(val_results$ET ~ val_results$LULC, main = "Daily evapotranspiration for different LULC classes", xlab = "LULC class", ylab = "Evapotranspiration (mm)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
