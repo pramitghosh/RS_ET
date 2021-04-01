@@ -265,7 +265,7 @@ plot(albedo, main = "Albedo", legend.args = list(text = 'Albedo'), xlab = "Easti
 
 ``` r
 LAI = LAI(method = "metric2010", image = image.TOAr, L = 0.1)
-plot(LAI, main = "Leaf Area Index", legend.args = list(text = 'LAI (m/m)'), xlab = "Easting (m)", ylab = "Northing (m)")
+plot(LAI, main = "Leaf Area Index", legend.args = list(text = 'LAI (m^2/m^2)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
