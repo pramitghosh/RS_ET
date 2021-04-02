@@ -119,7 +119,7 @@ source("calcLST.R")
 source("calcLST.R")
 
 L8.ST = loadST(path = "data/L8_C2/SR/", aoi = aoi)
-Ts = calcLST(L8.ST) 
+Ts = calcLST(L8.ST)
 # Ts = surfaceTemperature(image.DN = L8, LAI = LAI, sat = "L8", WeatherStation = WeatherStation, aoi = aoi, method = "SW")
 plot(Ts, main = "Surface Temperature", legend.args = list(text = 'Temperature (K)'), xlab = "Easting (m)", ylab = "Northing (m)")
 ```
