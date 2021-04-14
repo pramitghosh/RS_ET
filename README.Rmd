@@ -168,7 +168,7 @@ source("validation.R")
 
 leo_coords = c(403873.8,	5759162)
 leo_val = val_at_coords(image = ET.24, coord_pair = leo_coords)
-print(paste("24 hours ET value calculated at LEO Campus = ", leo_val, "mm/d", sep = ""))
+print(paste("24 hours ET value calculated at LEO Campus = ", leo_val, " mm/d", sep = ""))
 
 vpts = read_sf("results/pts.gpkg")
 pts_geom = st_geometry(vpts)
