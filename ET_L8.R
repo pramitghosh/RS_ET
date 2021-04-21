@@ -120,4 +120,5 @@ ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS
 # # ET_WS = dailyET(WeatherStation = WeatherStation, lat = 51.968791, long = 7.59513, elev = 60, height = 2)
 # # ET.24s = ET24h(Rn = Energy.Balance$EB$NetRadiation, G = Energy.Balance$EB$SoilHeat, H = Energy.Balance$EB$SensibleHeat, Ts = Energy.Balance$EB$surfaceTemperature, WeatherStation = WeatherStation, ETr.daily = ET_WS)
 
-Energy.Balance = METRIC.EB(image.DN = L8, image.SR = L8.SR, WeatherStation = WeatherStation, MTL = MTLfile, sat = "L8", DEM = DEM, aoi = aoi, alb.coeff = "Olmedo", LST.method = "SW", LAI.method = "metric2010", n = 1, ETp.coef = 1.2, Z.om.ws = 0.03, verbose = TRUE)
+# Energy.Balance = METRIC.EB(image.DN = L8, image.SR = L8.SR, WeatherStation = WeatherStation, MTL = MTLfile, sat = "L8", DEM = DEM, aoi = aoi, alb.coeff = "Olmedo", LST.method = "SW", LAI.method = "metric2010", n = 1, ETp.coef = 1.2, Z.om.ws = 0.03, verbose = TRUE)
+

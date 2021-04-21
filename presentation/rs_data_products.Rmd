@@ -1,0 +1,122 @@
+---
+title: "Remote Sensing data products"
+author: "Pramit Ghosh"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Remote Sensing Data Products
+
+We will look at the following remotely sensed data for Muenster and its surrounding areas. These were obtained from or calculated using data from the LANDSAT 8 and SRTM missions.
+
+* Landsat 8 Digital Numbers
+* Landsat 8 Surface Reflectance
+* Digital Elevation Model (using SRTM)
+* Relative Solar Incidence Angle
+* Incident Shortwave Radiation
+* Top-of-Atmosphere Reflectance
+* Albedo
+* Leaf Area Index
+* Surface Temperature
+* Incident Longwave Radiation
+* Outgoing Longwave Radiation
+* Net Radiation
+* Soil Heat Flux
+* Daily Evapotranspiration
+
+```{r calculate, include=FALSE}
+library(mapview)
+source("../ET_L8.R", chdir = TRUE)
+```
+
+## Landsat 8 Digital Numbers
+
+```{r L8, message=FALSE, warning=FALSE}
+mapview(L8, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Landsat 8 Surface Reflectance
+
+```{r message=FALSE, warning=FALSE}
+mapview(L8.SR, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Digital Elevation Model (in m)
+
+```{r message=FALSE, warning=FALSE}
+mapview(DEM, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Relative solar incidence angle (in radians)
+
+```{r message=FALSE, warning=FALSE}
+mapview(solar.angles.r[[5]], alpha = 0.8, maxpixels = 3000000)
+```
+
+## Incident Shortwave Radiation (in W/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(Rs.inc, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Top-of-Atmosphere Reflectance
+
+```{r message=FALSE, warning=FALSE}
+mapview(image.TOAr, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Alebdo
+
+```{r message=FALSE, warning=FALSE}
+mapview(albedo, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Leaf Area Index (in m^2/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(LAI, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Surface Temperature (in K)
+
+```{r message=FALSE, warning=FALSE}
+mapview(Ts, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Incident long-wave radiation (in W/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(Rl.inc, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Outgoing long-wave radiation (in W/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(Rl.out, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Net Radiation (in W/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(Rn, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Soil Heat Flux (in W/m^2)
+
+```{r message=FALSE, warning=FALSE}
+mapview(G, alpha = 0.8, maxpixels = 3000000)
+```
+
+## Daily evapotranspiration (in mm/d)
+
+```{r message=FALSE, warning=FALSE}
+mapview(ET.24, alpha = 0.8, maxpixels = 3000000)
+```
+
+
+
+
