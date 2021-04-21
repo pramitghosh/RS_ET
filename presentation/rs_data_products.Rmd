@@ -20,6 +20,11 @@ We will look at the following remotely sensed data for Muenster and its surround
 * Incident Shortwave Radiation
 * Top-of-Atmosphere Reflectance
 * Albedo
+
+continued...
+
+## Remote Sensing Data Products
+
 * Leaf Area Index
 * Surface Temperature
 * Incident Longwave Radiation
@@ -105,16 +110,16 @@ mapview(Rl.out, alpha = 0.8, maxpixels = 3000000)
 mapview(Rn, alpha = 0.8, maxpixels = 3000000)
 ```
 
-## Soil Heat Flux (in W/m^2)
+## Soil Heat Flux (in W/m^2) - upscaled
 
 ```{r message=FALSE, warning=FALSE}
-mapview(G, alpha = 0.8, maxpixels = 3000000)
+mapview(G, alpha = 0.8)
 ```
 
-## Daily evapotranspiration (in mm/d)
+## Daily evapotranspiration (in mm/d) - upscaled
 
 ```{r message=FALSE, warning=FALSE}
-mapview(ET.24, alpha = 0.8, maxpixels = 3000000)
+mapview(ET.24, alpha = 0.8)
 ```
 
 
