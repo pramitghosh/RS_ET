@@ -80,10 +80,10 @@ mapview(image.TOAr, alpha = 0.8, maxpixels = 3000000)
 mapview(albedo, alpha = 0.8, maxpixels = 3000000)
 ```
 
-## Leaf Area Index (in m^2/m^2)
+## Leaf Area Index (in m^2/m^2) - upscaled
 
 ```{r message=FALSE, warning=FALSE}
-mapview(LAI, alpha = 0.8, maxpixels = 3000000)
+mapview(LAI, alpha = 0.8)
 ```
 
 ## Surface Temperature (in K)
