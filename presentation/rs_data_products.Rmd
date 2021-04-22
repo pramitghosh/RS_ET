@@ -1,6 +1,7 @@
 ---
 title: "Remote Sensing data products"
-author: "Pramit Ghosh"
+author: Pramit Ghosh
+date: April 22, 2021
 output: ioslides_presentation
 ---
 
@@ -123,5 +124,7 @@ mapview(ET.24, alpha = 0.8)
 ```
 
 
+## Thank you!
 
+If you have any questions, please contact me via email: [pramitghosh@fh-muenster.de](mailto:pramitghosh@fh-muenster.de)
 
