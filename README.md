@@ -484,6 +484,14 @@ print(paste("24 hours ET value calculated at LEO Campus = ", leo_val, " mm/d", s
     ## [1] "24 hours ET value calculated at LEO Campus = 2.24090746282457 mm/d"
 
 ``` r
+fmo_coords = c(411014.92, 5776294.31)
+fmo_val = val_at_coords(image = ET.24, coord_pair = fmo_coords)
+print(paste("24 hours ET value calculated at FMO Airport = ", fmo_val, " mm/d", sep = ""))
+```
+
+    ## [1] "24 hours ET value calculated at FMO Airport = 2.47470191506715 mm/d"
+
+``` r
 vpts = read_sf("results/pts.gpkg")
 pts_geom = st_geometry(vpts)
 ET_pts = lapply(X = pts_geom, FUN = function(x, img) val_at_coords(as.numeric(x), img), ET.24)
