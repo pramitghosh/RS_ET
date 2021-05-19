@@ -15,7 +15,7 @@ ET_wrap = function(utm_x = 403490.150, utm_y = 5758499.100, dist = 25000, epsg =
                    wind = "data/weather_14-06-2017/Wind velocity-data-2021-03-08 12_16_05.csv",
                    MTL = "data/L8_C2/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.txt",
                    lat = 51.968791, long = 7.59513, elev = 60, height = 2,
-                   L8_path = "data/L8_C2/", L8.SR_path = "data/L8_C2/SR/", DEM_path = "data/SRTM_DEM/",
+                   L8_path = "data/L8_C2/", L8.SR_path = paste(L8_path, "SR/", sep = ""), DEM_path = "data/SRTM_DEM/",
                    LAI_method = "metric2010", LAI_L = 0.1,
                    mountainous = FALSE, mom_rough_method = "short.crops",
                    anchors_method = "flexible", anchors_n = 5, ETp.coef = 1.05, Z.om.ws = 0.03)
