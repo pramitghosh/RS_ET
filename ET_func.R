@@ -8,15 +8,16 @@ source("calcLST.R")
 source("calcAnchors.R")
 
 
-ET_wrap = function(utm_x = 403490.150, utm_y = 5758499.100, dist = 25000, epsg = 32632,
+ET_wrap = function(L8_path = "data/L8/",
+                   utm_x = 403490.150, utm_y = 5758499.100, dist = 25000, epsg = 32632,
                    rain = "data/weather_14-06-2017/Precipitation-data-2021-03-08 12_15_07.csv",
                    radiation = "data/weather_14-06-2017/Radiation-data-2021-03-08 12_17_32.csv",
                    humidity = "data/weather_14-06-2017/Relative humidity-data-2021-03-08 12_16_26.csv",
                    temperature = "data/weather_14-06-2017/Temperature-data-2021-03-08 12_15_39.csv",
                    wind = "data/weather_14-06-2017/Wind velocity-data-2021-03-08 12_16_05.csv",
-                   MTL = "data/L8_C2/LC08_L1TP_197024_20170614_20200903_02_T1_MTL.txt",
+                   MTL = paste(L8_path, "MTL.txt", sep = "/"),
                    lat = 51.968791, long = 7.59513, elev = 60, height = 2,
-                   L8_path = "data/L8/", L8.SR_path = paste(L8_path, "SR/", sep = ""), DEM_path = "data/SRTM_DEM/",
+                   L8.SR_path = paste(L8_path, "SR/", sep = ""), DEM_path = "data/SRTM_DEM/",
                    LAI_method = "metric2010", LAI_L = 0.1,
                    mountainous = FALSE, mom_rough_method = "short.crops",
                    anchors_method = "flexible", anchors_n = 5, ETp.coef = 1.05, Z.om.ws = 0.03)
@@ -105,12 +106,15 @@ elev = 47.8
 height = 2
 
 L8_path = paste(list.files("data/L8", full.names = TRUE), "/", sep = "")
-L8_MTL_path = paste(L8_path, "MTL.txt", sep = "/")
-L8.SR_path = paste(L8_path, "SR/", sep = "")
+# L8_MTL_path = paste(L8_path, "MTL.txt", sep = "/")
+# L8.SR_path = paste(L8_path, "SR/", sep = "")
 
+# t2 = ET_wrap(L8_path = L8_path[1], utm_x = utm_x, utm_y = utm_y,
+#              rain = rain, radiation = radiation, humidity = humidity, temperature = temperature, wind = wind,
+#              lat = lat, long = long, elev = elev, height = height)
 
-t2 = ET_wrap(utm_x = utm_x, utm_y = utm_y,
-             rain = rain, radiation = radiation, humidity = humidity, temperature = temperature, wind = wind,
-             MTL = L8_MTL_path[3], lat = lat, long = long, elev = elev, height = height,
-             L8_path = L8_path[3])
+ET_results = lapply(as.list(L8_path), ET_wrap,
+                    utm_x = utm_x, utm_y = utm_y,
+                    rain = rain, radiation = radiation, humidity = humidity, temperature = temperature, wind = wind,
+                    lat = lat, long = long, elev = elev, height = height)
 
