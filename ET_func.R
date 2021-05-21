@@ -122,6 +122,36 @@ fmo_coords = c(411014.92, 5776294.31)
 ET_FMO = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
                     "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[2]], fmo_coords)}))
 
-plot(ET_FMO$ET_RS ~ as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2)
+FMO_DWD = read_csv("data/weather_FMO/klima_1989-2020_MünsterOsnabrück.csv",
+                   col_types = cols(STATIONS_ID = col_skip(),
+                                    MESS_DATUM = col_datetime(format = "%Y-%m-%d %H:%M:%S UTC"),
+                                    QN_3 = col_skip(), FX.Windspitze = col_skip(),
+                                    FM.Windgeschwindigkeit = col_skip(),
+                                    QN_4 = col_skip(), RSK.Niederschlagshoehe = col_skip(),
+                                    RSKF.Niederschlagsform = col_skip(),
+                                    SDK.Sonnenscheindauer = col_skip(),
+                                    SHK_TAG.Schneehoehe = col_skip(),
+                                    NM.Bedeckungsgrad = col_skip(), VPM.Dampfdruck = col_skip(),
+                                    PM.Luftdruck = col_skip(), TMK.Lufttemperatur = col_skip(),
+                                    UPM.Relative_Feuchte = col_skip(),
+                                    TXK.Lufttemperatur_Max = col_skip(),
+                                    TNK.Lufttemperatur_Min = col_skip(),
+                                    TGK.Lufttemperatur_5cm_min = col_skip(),
+                                    eor = col_skip()))
+colnames(FMO_DWD) = c("Date", "ET_DWD")
+FMO_DWD$Date = as.character(FMO_DWD$Date)
+
+ET_comparison = merge(x = FMO_DWD, y = ET_FMO, all.y = TRUE)
+ET_cor = cor(ET_comparison$ET_DWD, y = ET_comparison$ET_RS)
+plot(ET_comparison$ET_DWD, ET_comparison$ET_RS,
+     xlab = "Daily ET from Climate station (mm/d)",
+     ylab = "Daily ET from Remote Sensing (mm/d)",
+     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)))
+abline(0, 1, col = "Blue", lty = 3)
+
+plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at FMO")
 axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
-title(xlab = "Time", line = 4, main = "Daily Evapotranspiration at FMO")
+title(xlab = "Time", line = 4)
+par(new = TRUE)
+plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "blue")
+legend(x = "bottomleft", legend = c("Remote Sensing", "DWD Climate Station"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01)
