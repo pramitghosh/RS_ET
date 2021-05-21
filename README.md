@@ -161,8 +161,10 @@ L8 = loadImage(path = "data/L8_C2/", sat = "L8", aoi = aoi)
 
 ``` r
 L8 = remove_negatives(L8)
-# plot(L8)
+plot(L8)
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## Load Surface Reflectance data
 
@@ -196,8 +198,10 @@ L8.SR = loadSR(path = "data/L8_C2/SR/", aoi = aoi)
 ``` r
 L8.SR = remove_negatives(L8.SR)
 L8.SR = L8_SR(L8.SR)
-# plot(L8.SR)
+plot(L8.SR)
 ```
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ## Load Digital Elevation Model
 
@@ -245,8 +249,12 @@ plot(Rs.inc, main = "Incident short-wave radiation", legend.args = list(text = '
 
 ``` r
 image.TOAr = calcTOAr(image.DN = L8, sat = "L8", MTL = MTLfile, incidence.rel = solar.angles.r$incidence.rel, aoi = aoi)
-# plot(image.TOAr)
+plot(image.TOAr)
+```
 
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+``` r
 # image.SR = calcSR(image.TOAr = image.TOAr, sat = "L7", surface.model = surface.model, incidence.hor = solar.angles.r$incidence.hor, WeatherStation = WeatherStation)
 ```
 
