@@ -2,7 +2,7 @@ library(sf)
 
 # leo_coords = c(403873.8,	5759162)
 
-val_at_coords = function(coord_pair, image)
+val_at_coords = function(image, coord_pair)
 {
   coord_extent = c(coord_pair, coord_pair)
   coord_extent = coord_extent[order(c(1,3,2,4))]

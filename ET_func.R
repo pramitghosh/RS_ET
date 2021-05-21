@@ -6,7 +6,7 @@ source("loadSR.R")
 source("calcAlbedo.R")
 source("calcLST.R")
 source("calcAnchors.R")
-
+source("validation.R")
 
 ET_wrap = function(L8_path = "data/L8/",
                    utm_x = 403490.150, utm_y = 5758499.100, dist = 25000, epsg = 32632,
@@ -118,3 +118,10 @@ ET_results = lapply(as.list(L8_path), ET_wrap,
                     rain = rain, radiation = radiation, humidity = humidity, temperature = temperature, wind = wind,
                     lat = lat, long = long, elev = elev, height = height)
 
+fmo_coords = c(411014.92, 5776294.31)
+ET_FMO = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
+                    "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[2]], fmo_coords)}))
+
+plot(ET_FMO$ET_RS ~ as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2)
+axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
+title(xlab = "Time", line = 4, main = "Daily Evapotranspiration at FMO")
