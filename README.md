@@ -475,7 +475,9 @@ ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS
 
 ![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-## Comparing evapotranspiration for different LULC classes
+## Validation
+
+### Comparing evapotranspiration for different LULC classes
 
 ``` r
 source("validation.R")
@@ -502,7 +504,7 @@ print(paste("24 hours ET value calculated at FMO Airport = ", fmo_val, " mm/d", 
 ``` r
 vpts = read_sf("results/pts.gpkg")
 pts_geom = st_geometry(vpts)
-ET_pts = lapply(X = pts_geom, FUN = function(x, img) val_at_coords(as.numeric(x), img), ET.24)
+ET_pts = lapply(X = pts_geom, FUN = function(x, img) val_at_coords(img, as.numeric(x)), ET.24)
 val_results = as.data.frame(cbind(vpts$LULC, as.numeric(unlist(ET_pts))))
 val_results$V2 = as.numeric(val_results$V2)
 colnames(val_results) = c("LULC", "ET")
@@ -511,3 +513,56 @@ boxplot(val_results$ET ~ val_results$LULC, main = "Daily evapotranspiration for 
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+### Comparison with DWD’s FMO climate station time-series data
+
+Assuming `ET_results` is present in the environment (after running
+`ET_func.R`):
+
+``` r
+ET_results = readRDS("results/ET_results.Rds")
+
+fmo_coords = c(411014.92, 5776294.31)
+ET_FMO = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
+                    "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[2]], fmo_coords)}))
+
+FMO_DWD = read_csv("data/weather_FMO/klima_1989-2020_MünsterOsnabrück.csv",
+                   col_types = cols(STATIONS_ID = col_skip(),
+                                    MESS_DATUM = col_datetime(format = "%Y-%m-%d %H:%M:%S UTC"),
+                                    QN_3 = col_skip(), FX.Windspitze = col_skip(),
+                                    FM.Windgeschwindigkeit = col_skip(),
+                                    QN_4 = col_skip(), RSK.Niederschlagshoehe = col_skip(),
+                                    RSKF.Niederschlagsform = col_skip(),
+                                    SDK.Sonnenscheindauer = col_skip(),
+                                    SHK_TAG.Schneehoehe = col_skip(),
+                                    NM.Bedeckungsgrad = col_skip(), VPM.Dampfdruck = col_skip(),
+                                    PM.Luftdruck = col_skip(), TMK.Lufttemperatur = col_skip(),
+                                    UPM.Relative_Feuchte = col_skip(),
+                                    TXK.Lufttemperatur_Max = col_skip(),
+                                    TNK.Lufttemperatur_Min = col_skip(),
+                                    TGK.Lufttemperatur_5cm_min = col_skip(),
+                                    eor = col_skip()))
+colnames(FMO_DWD) = c("Date", "ET_DWD")
+FMO_DWD$Date = as.character(FMO_DWD$Date)
+
+ET_comparison = merge(x = FMO_DWD, y = ET_FMO, all.y = TRUE)
+ET_cor = cor(ET_comparison$ET_DWD, y = ET_comparison$ET_RS)
+plot(ET_comparison$ET_DWD, ET_comparison$ET_RS,
+     xlab = "Daily ET from Climate station (mm/d)",
+     ylab = "Daily ET from Remote Sensing (mm/d)",
+     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)))
+abline(0, 1, col = "Blue", lty = 3)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+
+``` r
+plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at FMO")
+axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
+title(xlab = "Time", line = 4)
+par(new = TRUE)
+plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "blue")
+legend(x = "bottomleft", legend = c("Remote Sensing", "DWD Climate Station"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
