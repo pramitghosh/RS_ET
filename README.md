@@ -548,21 +548,21 @@ FMO_DWD$Date = as.character(FMO_DWD$Date)
 ET_comparison = merge(x = FMO_DWD, y = ET_FMO, all.y = TRUE)
 ET_cor = cor(ET_comparison$ET_DWD, y = ET_comparison$ET_RS)
 plot(ET_comparison$ET_DWD, ET_comparison$ET_RS,
-     xlab = "Daily ET from Climate station (mm/d)",
-     ylab = "Daily ET from Remote Sensing (mm/d)",
-     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)))
+     xlab = "Daily ET calculated using Climate station data (mm/d)",
+     ylab = "Daily ET calculated using Remote Sensing data (mm/d)",
+     main = "Estimating daily ET: Remote sensing vs. climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)))
 abline(0, 1, col = "Blue", lty = 3)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ``` r
-plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at FMO")
+plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "Evapotranspiration (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at Flughafen Münster/Osnabrück")
 axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
 title(xlab = "Time", line = 4)
 par(new = TRUE)
 plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "blue")
-legend(x = "bottomleft", legend = c("Remote Sensing", "DWD Climate Station"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01)
+legend(title = "ET calculated using", x = "bottomleft", legend = c("Remote Sensing data", "DWD Climate Station data"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01, pch = 1, title.adj = 0.1, seg.len = 3)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
