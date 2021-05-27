@@ -80,7 +80,7 @@ ET_wrap = function(L8_path = "data/L8/",
   hot.and.cold = calculate_anchors(image = image.TOAr, Ts, LAI, Rn = Rn, G = G, plots = TRUE, albedo = albedo, Z.om = Z.om, n = anchors_n, anchors.method = anchors_method, WeatherStation = WeatherStation, verbose = TRUE)
   H = calcH(anchors = hot.and.cold, mountainous = mountainous, Ts = Ts, Z.om = Z.om, WeatherStation = WeatherStation, ETp.coef = ETp.coef, Z.om.ws = Z.om.ws, DEM = DEM, Rn = Rn, G = G, verbose = TRUE)
   
-  ET_WS = dailyET(WeatherStation = WeatherStation, lat = lat, long = long, elev = elev, height = height, ET = "ETr", MTL = MTL)
+  ET_WS = dailyET(WeatherStation = WeatherStation, lat = lat, long = long, elev = elev, height = height, ET = "ETo", MTL = MTL)
   ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
   
   ET_date = WeatherStation$at.sat$date
