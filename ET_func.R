@@ -84,7 +84,7 @@ ET_wrap = function(L8_path = "data/L8/",
   ET.24 = ET24h(Rn, G, H$H, Ts, WeatherStation = WeatherStation, ETr.daily = ET_WS)
   
   ET_date = WeatherStation$at.sat$date
-  return(list(ET_date, ET.24))
+  return(list(ET_date, ET_WS, ET.24))
 }
 
 # ptm = proc.time()
@@ -118,9 +118,10 @@ ET_results = lapply(as.list(L8_path), ET_wrap,
                     rain = rain, radiation = radiation, humidity = humidity, temperature = temperature, wind = wind,
                     lat = lat, long = long, elev = elev, height = height)
 
-fmo_coords = c(411014.92, 5776294.31)
+fmo_coords = c(409569.18, 5776377.16)
 ET_FMO = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
-                    "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[2]], fmo_coords)}))
+                    "PET_RS" = sapply(ET_results, function(img_list){img_list[[2]]}),
+                    "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[3]], fmo_coords)}))
 
 FMO_DWD = read_csv("data/weather_FMO/klima_1989-2020_MünsterOsnabrück.csv",
                    col_types = cols(STATIONS_ID = col_skip(),
@@ -143,15 +144,28 @@ FMO_DWD$Date = as.character(FMO_DWD$Date)
 
 ET_comparison = merge(x = FMO_DWD, y = ET_FMO, all.y = TRUE)
 ET_cor = cor(ET_comparison$ET_DWD, y = ET_comparison$ET_RS)
+
+max_ET = max(ET_comparison$ET_DWD, ET_comparison$PET_RS, ET_comparison$ET_RS)
 plot(ET_comparison$ET_DWD, ET_comparison$ET_RS,
      xlab = "Daily ET from Climate station (mm/d)",
      ylab = "Daily ET from Remote Sensing (mm/d)",
-     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)))
+     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)),
+     xlim = c(0, max_ET), ylim = c(0, max_ET))
 abline(0, 1, col = "Blue", lty = 3)
+points(x = ET_comparison$ET_DWD, y = ET_comparison$PET_RS, pch = 4, col = "darkgreen")
 
-plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at FMO")
+# plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "ET (mm/d)", xlab = "", type = "b", lty = 2, col = "darkgreen", main = "Daily Evapotranspiration at FMO")
+# axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
+# title(xlab = "Time", line = 4)
+# par(new = TRUE)
+# plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "blue")
+# legend(x = "bottomleft", legend = c("Remote Sensing", "DWD Climate Station"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01)
+
+plot(ET_comparison$ET_DWD ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "Evapotranspiration (mm/d)", xlab = "", type = "b", lty = 2, col = "blue", main = "Daily Evapotranspiration at Flughafen Münster/Osnabrück", ylim = c(0, max_ET))
 axis(1, at = as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_FMO$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
 title(xlab = "Time", line = 4)
 par(new = TRUE)
-plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "blue")
-legend(x = "bottomleft", legend = c("Remote Sensing", "DWD Climate Station"), col = c("blue", "darkgreen"), lty = 2, cex = 0.8, inset = 0.01)
+plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "black")
+par(new = TRUE)
+plot(ET_comparison$PET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "darkgreen", pch = 4)
+legend(title = "ET calculated using", x = "bottomleft", legend = c("Remote Sensing data (actual ET)", "Remote Sensing data (potential ET)", "DWD Climate Station data (potential ET)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 3)
