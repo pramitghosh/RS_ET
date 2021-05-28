@@ -522,7 +522,7 @@ Assuming `ET_results` is present in the environment (after running
 ``` r
 ET_results = readRDS("results/ET_results.Rds")
 
-fmo_coords = c(411014.92, 5776294.31)
+fmo_coords = c(409569.18, 5776377.16)
 ET_FMO = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
                     "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[2]], fmo_coords)}))
 
