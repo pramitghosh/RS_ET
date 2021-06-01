@@ -149,7 +149,7 @@ max_ET = max(ET_comparison$ET_DWD, ET_comparison$PET_RS, ET_comparison$ET_RS)
 plot(ET_comparison$ET_DWD, ET_comparison$ET_RS,
      xlab = "Daily ET from Climate station (mm/d)",
      ylab = "Daily ET from Remote Sensing (mm/d)",
-     main = "Comparison of daily ET values with climate station data", sub = paste("Coefficient of correlation:", round(ET_cor, 3)),
+     main = "Comparison of daily ET values with climate station data",
      xlim = c(0, max_ET), ylim = c(0, max_ET))
 abline(0, 1, col = "Blue", lty = 3)
 points(x = ET_comparison$ET_DWD, y = ET_comparison$PET_RS, pch = 4, col = "darkgreen")
@@ -168,4 +168,40 @@ par(new = TRUE)
 plot(ET_comparison$ET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "black")
 par(new = TRUE)
 plot(ET_comparison$PET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "darkgreen", pch = 4)
-legend(title = "ET calculated using", x = "bottomleft", legend = c("Remote Sensing data (actual ET)", "Remote Sensing data (potential ET)", "DWD Climate Station data (potential ET)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 3)
+legend(title = "ET calculated using data from", x = "bottomleft", legend = c("Remote Sensing (actual)", "Remote Sensing (potential)", "DWD Climate Station (potential)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 2)
+
+#Leo
+leo_coords = c(403873.8,	5759162)
+ET_Leo = data.frame("Date" = sapply(ET_results, function(img_list){as.character(img_list[[1]])}),
+                    "PET_RS" = sapply(ET_results, function(img_list){img_list[[2]]}),
+                    "ET_RS" = sapply(ET_results, function(img_list){val_at_coords(img_list[[3]], leo_coords)}))
+PET_Leo = read_table2("data/ETp_Leo_correctedNA.dat",
+                      col_names = FALSE, col_types = cols(X1 = col_date(format = "%m/%d/%Y"),
+                                                          X2 = col_time(format = "%H:%M")),
+                      skip = 1)
+colnames(PET_Leo) = c("Date", "Time", "PET")
+Leo_FH = aggregate(x = PET_Leo, by = list(PET_Leo$Date), FUN = mean)[, c("Date", "PET")]
+Leo_FH$Date = as.character(Leo_FH$Date)
+Leo_ET_comparison = merge(x = Leo_FH, y = ET_Leo, all.y = TRUE)
+
+Leo_max_ET = max(Leo_ET_comparison$PET, Leo_ET_comparison$PET_RS, Leo_ET_comparison$ET_RS, na.rm = TRUE)
+
+plot(Leo_ET_comparison$PET, Leo_ET_comparison$ET_RS,
+     xlab = "Daily ET from Climate station (mm/d)",
+     ylab = "Daily ET from Remote Sensing (mm/d)",
+     main = "Comparison of daily ET values with climate station data",
+     xlim = c(0, Leo_max_ET), ylim = c(0, Leo_max_ET))
+abline(0, 1, col = "Blue", lty = 3)
+points(x = Leo_ET_comparison$PET, y = Leo_ET_comparison$PET_RS, pch = 4, col = "darkgreen")
+
+
+plot(Leo_ET_comparison$PET ~ as.POSIXct(Leo_ET_comparison$Date, format = "%Y-%m-%d"), xaxt = "none", ylab = "Evapotranspiration (mm/d)", xlab = "", type = "b", lty = 2, col = "blue", main = "Daily Evapotranspiration at Leo Campus", ylim = c(0, Leo_max_ET))
+axis(1, at = as.POSIXct(ET_Leo$Date, format = "%Y-%m-%d"), labels = format(as.POSIXct(ET_Leo$Date, format = "%Y-%m-%d"), format = "%m/%Y"), las = 2, cex.axis = 0.8)
+title(xlab = "Time", line = 4)
+par(new = TRUE)
+plot(Leo_ET_comparison$ET_RS ~ as.POSIXct(Leo_ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "black")
+par(new = TRUE)
+plot(Leo_ET_comparison$PET_RS ~ as.POSIXct(Leo_ET_comparison$Date, format = "%Y-%m-%d"), xlab = "", ylab = "", axes = FALSE, type = "b", lty = 2, col = "darkgreen", pch = 4)
+legend(title = "ET calculated using data from", x = "bottomleft", legend = c("Remote Sensing (actual)", "Remote Sensing (potential)", "Climate Station (potential)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 2)
+
+
