@@ -578,7 +578,10 @@ plot(ET_comparison$PET_RS ~ as.POSIXct(ET_comparison$Date, format = "%Y-%m-%d"),
 legend(title = "ET calculated using data from", x = "bottomleft", legend = c("Remote Sensing (actual)", "Remote Sensing (potential)", "Climate Station (potential)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-2.png)<!-- --> **Note:
+Potential ET from Remote Sensing, as shown above, is calculated at the
+location of the Weather Station and not at the location for which the
+Actual ET from Remote Sensing is calculated!**
 
 #### At Leonardo Campus, Münster
 
@@ -622,4 +625,7 @@ plot(Leo_ET_comparison$PET_RS ~ as.POSIXct(Leo_ET_comparison$Date, format = "%Y-
 legend(title = "ET calculated using data from", x = "bottomleft", legend = c("Remote Sensing (actual)", "Remote Sensing (potential)", "Climate Station (potential)"), col = c("black", "darkgreen", "blue"), lty = 2, cex = 0.8, inset = 0.01, pch = c(1,4,1), title.adj = 0.1, seg.len = 2)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-2.png)<!-- --> **Note:
+Potential ET from Remote Sensing, as shown above, is calculated at the
+location of the Weather Station and not at the location for which the
+Actual ET from Remote Sensing is calculated!**
